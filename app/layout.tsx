@@ -1,6 +1,8 @@
+import Container from "@/components/container";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,9 +18,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
-        <div className="p-9 pt-3">ok</div>
+      <body className={cn(inter.className)}>
+        <Container>{children}</Container>
       </body>
     </html>
   );
