@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, Github } from "lucide-react";
+import { signIn } from "next-auth/react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -61,13 +61,9 @@ export function UserAuthForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (isLogin) {
-      const response = await fetch("/api/users", { method: "GET" });
-      const body = await response.json();
-      if (response.ok) {
-        toast.success(toastSuccessMessage);
-      } else {
-        toast.error(body.message);
-      }
+      signIn("credentials", { ...values, redirect: false }).then((callback) => {
+        console.log(callback);
+      });
     } else {
       const response = await fetch("/api/users", {
         method: "POST",
