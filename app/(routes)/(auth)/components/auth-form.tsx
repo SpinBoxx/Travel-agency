@@ -23,6 +23,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { UserMinLengthPassword } from "@/enum/users";
+import { useRouter } from "next/navigation";
 
 interface Props {
   isLogin?: boolean;
@@ -37,6 +38,7 @@ export function UserAuthForm({
   className,
   ...props
 }: UserAuthFormProps) {
+  const router = useRouter();
   const submitButtonLabel = isLogin ? "Login" : "Create your account";
   const toastSuccessMessage = isLogin
     ? "Your are now connected !"
@@ -62,7 +64,12 @@ export function UserAuthForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (isLogin) {
       signIn("credentials", { ...values, redirect: false }).then((callback) => {
-        console.log(callback);
+        if (callback?.error) toast.error(callback.error);
+
+        if (callback?.ok && !callback.error) {
+          toast.success("Logged in");
+          router.push("/admin");
+        }
       });
     } else {
       const response = await fetch("/api/users", {
